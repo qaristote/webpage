@@ -10,9 +10,9 @@ let
   };
   makeSection = path: sectionTemplate (make path { });
 in builtins.map makeSection [
-  ./basics.html.nix
-  ./education.html.nix
-  ./experience.html.nix
-  # ./languages.html.nix
-  ./publications.html.nix
+  ./basics
+  ./education
+  ./experience
+  # ./languages
+  ./publications
 ]

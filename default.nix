@@ -28,7 +28,7 @@ let
     };
 
   webpage = { line-awesome, line-awesome-css ? lineAwesomeCSS
-    , source ? builtins.toFile "index.html" (make ./index.html.nix { })
+    , source ? builtins.toFile "index.html" (make ./html { })
     , files ? data.files,
       icon ? ./static/icon.png }:
     pkgs.runCommand "webpage" { } ''

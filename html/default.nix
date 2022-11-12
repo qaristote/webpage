@@ -1,6 +1,6 @@
 { html, make, ... }:
 
-let sections = html.sort.byKey "priority" (make ./content { });
+let sections = html.sort.byKey "priority" (make ./sections.nix { });
 in with html;
 html.html { lang = "en"; } [
   (head [
