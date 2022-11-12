@@ -32,7 +32,7 @@ html.html { lang = "en"; } [
     # CSS
     (linkWith {
       rel = "stylesheet";
-      href = "https://classless.de/classless.css";
+      href = "/static/css/classless.min.css";
     })
     # Favicon
     (linkWith {

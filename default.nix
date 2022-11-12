@@ -9,6 +9,19 @@ let
     let f = import path;
     in f ((builtins.intersectAttrs (builtins.functionArgs f) commonArgs)
       // overrides);
+
+  indexHTML = builtins.toFile "index.html" (make ./html { });
+  classlessCSS = builtins.toFile "classless.css" (make ./css/classless.nix {
+    headings-advanced = true;
+    tooltip-citations = true;
+    navbar = true;
+    details-cards = true;
+    big-first-letter = true;
+    ornaments = true;
+    printing = true;
+    grid = true;
+    navpos = "fixed";
+  });
   lineAwesomeCSS = { fontsRelativeDirectory ? "./webfonts" }:
     pkgs.stdenv.mkDerivation rec {
       name = "line-awesome-css";
@@ -16,8 +29,8 @@ let
 
       src = pkgs.fetchurl {
         url =
-          "https://raw.githubusercontent.com/icons8/line-awesome/${version}/dist/line-awesome/css/line-awesome.min.css";
-        sha256 = "sha256:zmGhjPCE8VADeYNABEZD8ymsX5AEWsstnneDaL15mFQ=";
+          "https://raw.githubusercontent.com/icons8/line-awesome/${version}/dist/line-awesome/css/line-awesome.css";
+        sha256 = "sha256:GU24Xz6l3Ww4ZCcL2ByssTe04fHBRz9k2aZVRdj0xm4=";
       };
 
       phases = [ "installPhase" ];
@@ -27,18 +40,25 @@ let
       '';
     };
 
-  webpage = { line-awesome, line-awesome-css ? lineAwesomeCSS
-    , source ? builtins.toFile "index.html" (make ./html { })
-    , files ? data.files,
-      icon ? ./static/icon.png }:
-    pkgs.runCommand "webpage" { } ''
+  webpage = { # Packages
+    line-awesome, yuicompressor,
+    # Source files
+    index-html ? indexHTML, classless-css ? classlessCSS
+    , line-awesome-css ? lineAwesomeCSS, files ? data.files
+    , icon ? ./static/icon.png }:
+    let compress = "'${yuicompressor}/bin/yuicompressor'";
+    in pkgs.runCommand "webpage" { } ''
       mkdir "$out"
-      ln -sT "${source}" "$out/index.html"
+      ln -sT "${index-html}" "$out/index.html"
       mkdir "$out/static"
       ln -sT "${icon}" "$out/static/icon.png"
       ln -sT "${files}" "$out/static/files"
+      mkdir -p "$out/static/css"
+      ${compress} "${classless-css}" --type css -o "$out/static/css/classless.min.css"
       mkdir -p "$out/static/css/fonts/line-awesome"
       ln -sT "${line-awesome}/share/fonts/woff2" "$out/static/css/fonts/line-awesome/webfonts"
-      ln -sT "${line-awesome-css {}}" "$out/static/css/fonts/line-awesome/line-awesome.min.css"
+      ${compress} "${
+        line-awesome-css { }
+      }" --type css -o "$out/static/css/fonts/line-awesome/line-awesome.min.css"
     '';
 in pkgs.callPackage webpage { }
