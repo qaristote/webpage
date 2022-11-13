@@ -317,7 +317,7 @@ lib.optionalString reset (
   	color: ${cmed};
   	text-align: center;
   	font-size: 1.5em;
-  	content: ${ornament};
+  	content: "${ornament}";
   }
 ''
 
