@@ -8,6 +8,7 @@ let
   };
   center = container: content:
     container { style = "text-align: center"; } content;
+  icon-lab = name: html.icon "lab la-${name}";
 in {
   title = "About me";
   priority = 0;
@@ -39,6 +40,19 @@ in {
             ${number} ${street}${br}
              ${postalCode} ${city}
           ''))
+          (dt "${icon "las la-globe"} online")
+          (dd (for profiles (name: value:
+            with value;
+            "${icon-lab icon} ${
+              if value ? url then
+                href url name
+              else
+                "${name}: ${
+                  lines (for profiles (name: value:
+                    with value;
+                    "${icon-lab icon} ${href url name}"))
+                } ${br}"
+            }")))
         ]))
       ])
       description
