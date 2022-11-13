@@ -47,6 +47,9 @@ html.html { lang = "en"; } [
         (section: li (href "#${section.title}" section.title)))))
     ])
     (main { role = "main"; } (for sections (section: section.body)))
-    (footer [ ])
+    (footer
+      "Webpage generated with the help of ${href "https://nixos.org/" "Nix"}, ${
+        href "https://classless.de/" "Classless CSS"
+      } and ${href "https://yui.github.io/yuicompressor/" "YUI Compressor"}.")
   ])
 ]
