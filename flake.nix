@@ -1,14 +1,11 @@
 {
   description = "Source code of Quentin Aristote's personal webpage.";
 
-  inputs = {
-    flake-utils.url = "github:numtide/flake-utils";
-    data = {
-      url = "github:qaristote/info";
-      inputs = {
-        nixpkgs.follows = "";
-        flake-utils.follows = "";
-      };
+  inputs.data = {
+    url = "github:qaristote/info";
+    inputs = {
+      nixpkgs.follows = "/nixpkgs";
+      flake-utils.follows = "/flake-utils";
     };
   };
 
