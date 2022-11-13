@@ -11,17 +11,23 @@ let
       // overrides);
 
   indexHTML = builtins.toFile "index.html" (make ./html { });
-  classlessCSS = builtins.toFile "classless.css" (make ./css/classless.nix {
-    headings-advanced = true;
-    tooltip-citations = true;
-    navbar = true;
-    details-cards = true;
-    big-first-letter = true;
-    ornaments = true;
-    printing = true;
-    grid = true;
-    navpos = "fixed";
-  });
+  classlessCSS = let
+    setOption = option: value: { "${option}" = value; };
+    setOptions = options: value:
+      builtins.foldl' (tmp: option: tmp // setOption option value) { } options;
+    enable = options: setOptions options true;
+    disable = options: setOptions options false;
+  in builtins.toFile "classless.css" (make ./css/classless.nix
+    (disable [ "tables" "hr" ] // enable [
+      "headings-advanced"
+      "tooltip-citations"
+      "navbar"
+      "details-cards"
+      "big-first-letter"
+      "ornaments"
+      "printing"
+      "grid"
+    ] // setOption "navpos" "fixed"));
   lineAwesomeCSS = { fontsRelativeDirectory ? "./webfonts" }:
     pkgs.stdenv.mkDerivation rec {
       name = "line-awesome-css";
