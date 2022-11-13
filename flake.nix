@@ -13,8 +13,9 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, data }:
-    { lib = import ./lib { inherit (nixpkgs) lib; }; } //
-    flake-utils.lib.eachDefaultSystem (system:
+    {
+      lib = import ./lib { inherit (nixpkgs) lib; };
+    } // flake-utils.lib.eachDefaultSystem (system:
       let pkgs = nixpkgs.legacyPackages.${system};
       in rec {
         packages.webpage = import ./default.nix {
