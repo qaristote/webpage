@@ -3,7 +3,13 @@
 
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
-    data.url = "github:qaristote/info";
+    data = {
+      url = "github:qaristote/info";
+      inputs = {
+        nixpkgs.follows = "";
+        flake-utils.follows = "";
+      };
+    };
   };
 
   outputs = { self, nixpkgs, flake-utils, data }:
