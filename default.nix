@@ -24,7 +24,6 @@ let
       "navbar"
       "details-cards"
       "big-first-letter"
-      "ornaments"
       "printing"
       "grid"
     ] // setOption "navpos" "fixed"));
