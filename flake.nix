@@ -12,14 +12,21 @@
   outputs = { self, nixpkgs, flake-utils, data }:
     {
       lib = import ./lib { inherit (nixpkgs) lib; };
+      overlays.default = final: prev: import ./pkgs { pkgs = final; };
     } // flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = nixpkgs.legacyPackages.${system};
-      in rec {
-        packages.webpage = import ./default.nix {
-          inherit pkgs;
-          inherit (self.lib.pp) html;
-          data = data.formatWith."${system}" self.lib.pp.html;
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ self.overlays.default ];
         };
-        defaultPackage = packages.webpage;
+      in {
+        packages = import ./pkgs { inherit pkgs; } // {
+          webpage = import ./default.nix {
+            inherit pkgs;
+            inherit (self.lib.pp) html;
+            data = data.formatWith."${system}" self.lib.pp.html;
+          };
+        };
+        defaultPackage = self.packages."${system}".webpage;
       });
 }
