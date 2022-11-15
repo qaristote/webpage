@@ -1,6 +1,6 @@
 { stdenv, fetchurl, fontsRelativeDirectory ? "./webfonts" }:
 stdenv.mkDerivation rec {
-  name = "line-awesome-css";
+  name = "line-awesome.css";
   version = "v1.2.1";
 
   src = fetchurl {
