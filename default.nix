@@ -35,27 +35,27 @@ in pkgs.callPackage ({
   index-html ? indexHTML, classless-css ? classlessCSS, files ? data.files
   , icon ? ./static/icon.png }:
   let
-    compress = "'${yuicompressor}/bin/yuicompressor'";
-    clean = "'${uncss}/bin/uncss'";
+    compress = "${yuicompressor}/bin/yuicompressor";
+    clean = "${uncss}/bin/uncss";
   in pkgs.runCommand "webpage" { } ''
     set -o xtrace
-    mkdir "$out" && pushd "$_"
-    ln -sT "${index-html}" index.html
+    mkdir $out && pushd "$_"
+    ln -sT ${index-html} index.html
     popd
 
-    mkdir "$out/static" && pushd "$_"
-    ln -sT "${icon}" icon.png
-    ln -sT "${files}" files
+    mkdir $out/static && pushd "$_"
+    ln -sT ${icon} icon.png
+    ln -sT ${files} files
     popd
 
-    mkdir -p "$out/static/css" && pushd "$_"
-    ${clean} "${index-html}" --stylesheets file://${classless-css} \
+    mkdir -p $out/static/css && pushd "$_"
+    ${clean} ${index-html} --stylesheets file://${classless-css} \
     | ${compress} --type css >classless.min.css
     popd
 
-    mkdir -p "$out/static/css/fonts/line-awesome" && pushd "$_"
-    ln -sT "${line-awesome}/share/fonts/woff2" webfonts
-    ${clean} "${index-html}" --stylesheets file://${line-awesome-css} \
+    mkdir -p $out/static/css/fonts/line-awesome && pushd "$_"
+    ln -sT ${line-awesome}/share/fonts/woff2 webfonts
+    ${clean} ${index-html} --stylesheets file://${line-awesome-css} \
     | ${compress} --type css >line-awesome.min.css
     popd
 
