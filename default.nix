@@ -30,13 +30,22 @@ let
 
 in pkgs.callPackage ({
   # Packages
-  line-awesome, line-awesome-css, uncss, yuicompressor,
+  line-awesome, line-awesome-css, uncss, yuicompressor, imagemagick,
   # Source files
   index-html ? indexHTML, classless-css ? classlessCSS, files ? data.files
   , icon ? ./static/icon.png }:
   let
     compress = "${yuicompressor}/bin/yuicompressor";
     clean = "${uncss}/bin/uncss";
+    compressJPEG = size: ''
+      ${imagemagick}/bin/convert -sampling-factor 4:2:0 \
+                                 -strip \
+                                 -quality 85 \
+                                 -interlace JPEG \
+                                 -colorspace RGB \
+                                 -resize ${size} \
+                                 -colorspace sRGB \
+    '';
   in pkgs.runCommand "webpage" { } ''
     set -o xtrace
     mkdir $out && pushd "$_"
@@ -45,7 +54,14 @@ in pkgs.callPackage ({
 
     mkdir $out/static && pushd "$_"
     ln -sT ${icon} icon.png
-    ln -sT ${files} files
+    cp -r ${files} files
+    chmod a+w files
+    pushd files
+    ${compressJPEG "128x128"} avatar.jpg avatar.jpg.128
+    ${compressJPEG "256x256"} avatar.jpg avatar.jpg.256
+    ${compressJPEG "512x512"} avatar.jpg avatar.jpg.512
+    popd
+    chmod a-w files
     popd
 
     mkdir -p $out/static/css && pushd "$_"

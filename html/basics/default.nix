@@ -1,4 +1,4 @@
-{ html, data, ... }:
+{ html, data, lib, ... }:
 
 let
   basics = data.basics;
@@ -20,7 +20,17 @@ in {
         (col [
           (imgWith {
             src = avatar;
+            srcset = lib.concatStringsSep ", "
+              (builtins.map (size: "${avatar}.${size} ${size}w") [
+                "128"
+                "256"
+                "512"
+              ] ++ [ "${avatar} 934w" ]);
+            sizes = "(max-width: 480px) 60vw, 30vw";
+            loading = "lazy";
+            alt = "Quentin Aristote";
             style = ''
+              aspect-ratio: 1 / 1;
               border-radius: 50%;
               padding-left: 20%;
               padding-right: 20%;
