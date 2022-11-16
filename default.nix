@@ -26,7 +26,7 @@ let
       "big-first-letter"
       "printing"
       "grid"
-    ] // setOption "navpos" "fixed"));
+    ]));
 
 in pkgs.callPackage ({
   # Packages
