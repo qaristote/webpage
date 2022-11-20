@@ -32,8 +32,8 @@ in {
             style = ''
               aspect-ratio: 1 / 1;
               border-radius: 50%;
-              padding-left: 20%;
-              padding-right: 20%;
+              margin: auto;
+              display: block;
             '';
           })
           (center h3 name)
