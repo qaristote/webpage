@@ -40,6 +40,6 @@
           };
         };
         defaultPackage = self.packages."${system}".webpage;
-        devShell = pkgs.mkShell { packages = with pkgs; [ miniserve ]; };
+        devShell = pkgs.mkShell { packages = with pkgs; [ nixfmt miniserve ]; };
       });
 }
