@@ -47,9 +47,9 @@ html.html { lang = "en"; } [
         (section: li (href "#${section.title}" section.title)))))
     ])
     (main { role = "main"; } (for sections (section: section.body)))
-    (footer "Webpage generated with the help of ${
-        href "https://nixos.org/" "Nix"
-      } and ${
+    (footer "Webpage ${
+        href "#Software#aristoteWebpage" "generated"
+      } with the help of ${href "https://nixos.org/" "Nix"} and ${
         href "https://classless.de/" "Classless CSS"
       }, and compressed with the help of ${
         href "https://github.com/uncss/uncss" "uncss"

@@ -15,4 +15,5 @@ in builtins.map makeSection [
   ./experience
   # ./languages
   ./publications
+  ./software
 ]
