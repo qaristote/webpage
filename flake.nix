@@ -21,7 +21,12 @@
   outputs = { self, nixpkgs, flake-utils, data, uncss }:
     {
       lib = import ./lib { inherit (nixpkgs) lib; };
-      overlays.default = final: prev: import ./pkgs { pkgs = final; };
+      overlays = {
+        default = final: prev: {
+          personal.webpage = self.packages."${final.system}".webpage;
+        };
+        deps = final: prev: import ./pkgs { pkgs = final; };
+      };
     } // flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
