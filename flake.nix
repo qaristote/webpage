@@ -32,7 +32,7 @@
         pkgs = import nixpkgs {
           inherit system;
           overlays = [
-            self.overlays.default
+            self.overlays.deps
             (final: prev: { uncss = uncss.packages."${system}".default; })
           ];
         };
