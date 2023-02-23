@@ -28,6 +28,12 @@ let
       "grid"
     ]));
 
+  robotsTXT = builtins.toFile "robots.txt" ''
+    user-agent: *
+    disallow: /static/
+    allow: /static/icon.png
+  '';
+
 in pkgs.callPackage ({
   # Packages
   line-awesome, line-awesome-css, uncss, yuicompressor, imagemagick,
@@ -50,6 +56,7 @@ in pkgs.callPackage ({
     set -o xtrace
     mkdir $out && pushd "$_"
     ln -sT ${index-html} index.html
+    ln -sT ${robotsTXT} robots.txt
     popd
 
     mkdir $out/static && pushd "$_"
