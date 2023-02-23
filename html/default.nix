@@ -1,6 +1,13 @@
 { html, make, ... }:
 
-let sections = html.sort.byKey "priority" (make ./sections.nix { });
+let
+  sections = html.sort.byKey "priority" (make ./sections.nix { });
+  preloadFont = href:
+    html.linkWith {
+      inherit href;
+      rel = "preload";
+      as = "font";
+    };
 in with html;
 html.html { lang = "en"; } [
   (head [
@@ -29,6 +36,8 @@ html.html { lang = "en"; } [
       rel = "stylesheet";
       href = "/static/css/fonts/line-awesome/line-awesome.min.css";
     })
+    (preloadFont "/static/css/fonts/line-awesome/webfonts/la-solid-900.woff2")
+    (preloadFont "/static/css/fonts/line-awesome/webfonts/la-brands-400.woff2")
     # CSS
     (linkWith {
       rel = "stylesheet";
