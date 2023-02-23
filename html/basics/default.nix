@@ -27,7 +27,6 @@ in {
                 "512"
               ] ++ [ "${avatar} 934w" ]);
             sizes = "(max-width: 480px) 60vw, 30vw";
-            loading = "lazy";
             alt = "Quentin Aristote";
             style = ''
               aspect-ratio: 1 / 1;
