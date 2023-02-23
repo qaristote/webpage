@@ -9,7 +9,7 @@ let
       as = "font";
     };
 in with html;
-html.html { lang = "en"; } [
+doctype "html" + html.html { lang = "en"; } [
   (head [
     # Basic page needs
     (metaWith { charset = "utf-8"; })

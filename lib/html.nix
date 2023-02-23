@@ -202,8 +202,9 @@ let
     "${tagsContainerFuns.time { date = start; } start} - ${
       tagsContainerFuns.time { date = end; } end
     }";
+  doctype = type: "<!DOCTYPE ${type}>\n";
 in tagsContainerFuns // tagsEmptyFuns // {
-  inherit for comment container empty file href icon lines mailto timerange;
+  inherit for comment container doctype empty file href icon lines mailto timerange;
 } // {
   sort = let
     lt = x: y: x < y;
