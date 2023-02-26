@@ -19,7 +19,7 @@ in {
                 (for supervisors (supervisor: with supervisor; href url name))
               }" ++ lib.optional (lib.hasAttr "assets" item)
               (lib.concatStringsSep " " (for assets
-                (asset: with asset; href "#Publications#${id}" "${icon "las la-paperclip"} ${name}"))))))
+                (asset: with asset; href "#${type}#${id}" "${icon "las la-paperclip"} ${name}"))))))
         ])
         (dd description)
       ]));
