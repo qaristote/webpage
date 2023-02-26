@@ -5,6 +5,10 @@ let
   attrValsOpt = attrs: attrSet:
     lib.attrVals (builtins.filter (attr: lib.hasAttr attr attrSet) attrs)
     attrSet;
+  concatStringsPrefix = prefix: strings:
+    lib.concatStrings (builtins.map (string: prefix + string) strings);
+  concatStringsSuffix = suffix: strings:
+    lib.concatStrings (builtins.map (string: string + suffix) strings);
   format = publication:
     with html;
     with publication;
@@ -16,7 +20,7 @@ let
     in lib.optionalAttrs (authorsOther != [ ]) {
       authors = "With ${lib.concatStringsSep ", " authorsOther}";
     }) // lib.optionalAttrs (publication ? container-title) {
-      published = "In ${em container-title}, " + lib.concatStringsSep ", "
+      published = "In ${em container-title}" + concatStringsPrefix ", "
         (attrValsOpt [ "volume" "issue" "publisher" ] publication);
     } // lib.optionalAttrs (publication ? ISBN) {
       isbn = "${small "ISBN"}: ${ISBN}";
@@ -37,7 +41,7 @@ in {
           (dt { id = "Publications#${id}"; }
             "${href { target = "_blank"; } url title} (${year})")
           (dd [
-            (lib.concatStringsSep ". "
+            (concatStringsSuffix ". "
               (attrValsOpt [ "authors" "published" "isbn" "issn" "doi" ]
                 formatted))
             (details [
