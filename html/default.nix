@@ -47,7 +47,7 @@ doctype "html" + html.html { lang = "en"; } [
     (linkWith {
       rel = "icon";
       type = "image/png";
-      href = "static/icon.png";
+      href = "/static/icon.png";
     })
   ])
   (body [
