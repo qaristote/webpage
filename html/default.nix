@@ -51,10 +51,6 @@ doctype "html" + html.html { lang = "en"; } [
     })
   ])
   (body [
-    (header [
-      (nav (ul ([ (li "Quentin Aristote") ] ++ for sections
-        (section: li (href "#${section.title}" section.title)))))
-    ])
     (main { role = "main"; } (for sections (section: section.body)))
     (footer "Webpage ${
         href "#Software#aristoteWebpage" "generated"
