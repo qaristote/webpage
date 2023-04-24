@@ -46,8 +46,9 @@ in {
           (dd (for keys.pgp (name: path: href path name)))
           (dt "${icon "las la-map-marker"} address")
           (dd (with location; ''
+            Office ${office}${br}
             ${number} ${street}${br}
-             ${postalCode} ${city}
+            ${postalCode} ${city}
           ''))
           (dt "${icon "las la-globe"} online")
           (dd (for profiles (name: value:
