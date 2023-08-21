@@ -5,6 +5,9 @@ in {
   title = "Languages";
   priority = 40;
   body = with html;
-    lines (for languages
-      (language: with language; "${icon} ${name} (${proficiency})"));
+    (for languages (language:
+      with language;
+      "${
+        lib.concatStrings (for icon.codepoints (codepoint: "&x${codepoint}"))
+      } ${name} (${proficiency})"));
 }

@@ -2,10 +2,16 @@
 
 let
   comment = content: "<!-- ${content} -->";
-  lines = lib.concatStringsSep "\n";
-  sortByPath = cmp: keys:
-    lib.sort
-    (x: y: cmp (lib.getAttrFromPath keys x) (lib.getAttrFromPath keys y));
+  lines = content:
+    if lib.isList content then
+      (if content == [ ] then
+        ""
+      else
+        lines (builtins.head content) + "\n" + lines (builtins.tail content))
+    else
+      content;
+  sortByFun = cmp: f: lib.sort (x: y: cmp (f x) (f y));
+  sortByPath = cmp: keys: sortByFun cmp (lib.getAttrFromPath keys);
   sortByKey = cmp: key: sortByPath cmp [ key ];
   for = iterable: f:
     if lib.isList iterable then
@@ -18,16 +24,14 @@ let
     "<${tag}${
       lib.concatMapStrings (x: " ${x}") (lib.mapAttrsToList setAttr attrs)
     }>";
-  lineOrLines = f: content:
-    if lib.isList content then f (lines content) else f content;
   tryOverride = f: arg:
     if lib.isAttrs arg then
       tryOverride (attrs: content: f (arg // attrs) content)
     else
       f { } arg;
   container = tag:
-    tryOverride (attrs:
-      lineOrLines (content: "${tagWithAttrs tag attrs}${content}</${tag}>"));
+    tryOverride
+    (attrs: content: "${tagWithAttrs tag attrs}${lines content}</${tag}>");
 
   empty = tagWithAttrs;
 
@@ -198,13 +202,36 @@ let
   icon =
     tryOverride (attrs: id: tagsContainerFuns.i (attrs // { class = id; }) "");
   mailto = tryOverride (attrs: address: href attrs "mailto:${address}" address);
-  timerange = start: end:
-    "${tagsContainerFuns.time { date = start; } start} - ${
-      tagsContainerFuns.time { date = end; } end
-    }";
-  doctype = type: "<!DOCTYPE ${type}>\n";
+  timerange = let
+    print = date:
+      let
+        year = builtins.toString date.year;
+        month = lib.optionalString (date.month < 10) "0"
+          + builtins.toString date.month;
+        monthPretty = builtins.head (lib.drop (date.month - 1) [
+          "jan"
+          "feb"
+          "mar"
+          "apr"
+          "may"
+          "jun"
+          "jul"
+          "aug"
+          "sep"
+          "oct"
+          "nov"
+          "dev"
+        ]);
+        day = builtins.toString date.day;
+      in tagsContainerFuns.time { date = "${year}-${month}-${day}"; }
+      "${monthPretty}. ${year}";
+  in start: end: "${print start} - ${print end}";
+  doctype = type: ''
+    <!DOCTYPE ${type}>
+  '';
 in tagsContainerFuns // tagsEmptyFuns // {
-  inherit for comment container doctype empty file href icon lines mailto timerange;
+  inherit for comment container doctype empty file href icon lines mailto
+    timerange;
 } // {
   sort = let
     lt = x: y: x < y;
@@ -212,9 +239,11 @@ in tagsContainerFuns // tagsEmptyFuns // {
   in {
     byKey = sortByKey lt;
     byPath = sortByPath lt;
+    byFun = sortByFun lt;
     reverse = {
       byKey = sortByKey gt;
       byPath = sortByPath gt;
+      byFun = sortByFun gt;
     };
   };
 }

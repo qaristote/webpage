@@ -20,8 +20,7 @@ in {
   body = with html;
     dl (for (sort.byPath [ "title" ] software) (softwarePiece:
       let formatted = format softwarePiece;
-      in with formatted;
-      lines [
+      in with formatted; [
         (dt { id = "Software#${id}"; } (href { target = "_blank"; } url title))
         (dd abstract)
       ]));

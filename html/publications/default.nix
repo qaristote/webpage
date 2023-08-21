@@ -15,7 +15,8 @@ let
     {
       inherit id title url year abstract cite;
     } // (let
-      authorsOther = lib.remove data.basics.name
+      authorsOther =
+        lib.remove "${data.basics.name.first} ${data.basics.name.last}"
         (builtins.map (author: "${author.given} ${author.family}") author);
     in lib.optionalAttrs (authorsOther != [ ]) {
       authors = "With ${lib.concatStringsSep ", " authorsOther}";

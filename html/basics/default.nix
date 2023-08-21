@@ -1,7 +1,9 @@
 { html, data, lib, ... }:
 
 let
-  basics = data.basics;
+  basics = data.basics // {
+    fullname = with data.basics.name; "${first} ${last}";
+  };
   col = html.div {
     class = "col";
     style = "align-self: center";
@@ -13,8 +15,7 @@ in {
   title = "About me";
   priority = 0;
   body = with html;
-    with data.basics;
-    lines [
+    with basics; [
       br
       (div { class = "row"; } [
         (col [
@@ -27,7 +28,7 @@ in {
                 "512"
               ] ++ [ "${avatar} 934w" ]);
             sizes = "(max-width: 480px) 60vw, 30vw";
-            alt = "Quentin Aristote";
+            alt = fullname;
             style = ''
               aspect-ratio: 1 / 1;
               border-radius: 50%;
@@ -35,13 +36,14 @@ in {
               display: block;
             '';
           })
-          (center h3 name)
-          (center p (with institution; [ position br "@ ${href url name}" ]))
+          (center h3 fullname)
+          (center p (with institution; [ position wbr "@ ${href url name}" ]))
         ])
         (col (dl [
           (dt "${icon "las la-at"} e-mail")
-          (dd (for email
-            (email: "${mailto email.address} (${email.name}) ${br}")))
+          (dd
+            (lib.mapAttrsToList (name: value: "${mailto value} (${name}) ${br}")
+              email))
           (dt "${icon "las la-key"} keys")
           (dd (for keys.pgp (name: path: href path name)))
           (dt "${icon "las la-map-marker"} address")

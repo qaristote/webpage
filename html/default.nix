@@ -1,4 +1,4 @@
-{ html, make, ... }:
+{ html, make, data, ... }:
 
 let
   sections = html.sort.byKey "priority" (make ./sections.nix { });
@@ -8,15 +8,16 @@ let
       rel = "preload";
       as = "font";
     };
+  fullname = with data.basics.name; "${first} ${last}";
 in with html;
 doctype "html" + html.html { lang = "en"; } [
   (head [
     # Basic page needs
     (metaWith { charset = "utf-8"; })
-    (title "Quentin Aristote")
+    (title fullname)
     (metaWith {
       name = "description";
-      content = "Personal webpage of Quentin Aristote";
+      content = "Personal webpage of ${fullname}";
     })
     (metaWith {
       name = "author";
