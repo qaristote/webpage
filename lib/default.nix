@@ -1,5 +1,3 @@
-{ lib }:
-
-{
-  pp.html = import ./html.nix { inherit lib; };
+{lib}: {
+  pp.html = import ./html.nix {inherit lib;};
 }

@@ -1,8 +1,12 @@
-{ html, data, lib, ... }:
-
-let
+{
+  html,
+  data,
+  lib,
+  ...
+}: let
   education = data.education;
-  sortByDateStart = html.sort.reverse.byFun
+  sortByDateStart =
+    html.sort.reverse.byFun
     (item: with item.date.start; day + 100 * month + 10000 * year);
 in {
   title = "Education";
@@ -18,20 +22,19 @@ in {
         (dd [
           (lib.optionalString (item ? years) (for (sortByDateStart years) (year:
             with year;
-            details [
-              (summary [
-                (with program;
-                  "${studyType} @ ${href url (abbr { title = name; } acronym)}")
-                br
-                (with date; small (timerange start end))
-              ])
-              description
-              (for courses (category: list:
-                details [
-                  (summary "${category} courses")
-                  (lib.concatStringsSep " · " (lib.naturalSort list))
-                ]))
-            ])))
+              details [
+                (summary [
+                  (with program; "${studyType} @ ${href url (abbr {title = name;} acronym)}")
+                  br
+                  (with date; small (timerange start end))
+                ])
+                description
+                (for courses (category: list:
+                  details [
+                    (summary "${category} courses")
+                    (lib.concatStringsSep " · " (lib.naturalSort list))
+                  ]))
+              ])))
           description
         ])
       ]));
