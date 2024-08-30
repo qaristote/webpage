@@ -8,11 +8,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1709331356,
-        "narHash": "sha256-GigzY9UHIzipPKpOScO8f2njxSpbSy6Hb9rKwHQ4EN8=",
+        "lastModified": 1725035720,
+        "narHash": "sha256-764uAk5btX4T2XQXgIi3J2duQbSqYYSVRWHAmJiepQE=",
         "owner": "qaristote",
         "repo": "info",
-        "rev": "05f9693c48ac143bd6845a9f14c1c0b8630f9779",
+        "rev": "94398458e52445e9940aa3a3ede5c2e3821c0030",
         "type": "github"
       },
       "original": {
