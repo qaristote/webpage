@@ -14,11 +14,6 @@
     nixpkgs = {};
   };
 
-  nixConfig = {
-    extra-trusted-public-keys = "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=";
-    extra-trusted-substituters = "https://devenv.cachix.org";
-  };
-
   outputs = {
     flake-parts,
     my-nixpkgs,
@@ -40,26 +35,26 @@
         ...
       }: {
         packages = let
-          pkgsLocal = import ./pkgs {inherit pkgs;};
           pkgs' = pkgs.extend (
-            _: _:
-              pkgsLocal // {uncss = inputs.uncss.packages."${system}".default;}
+            _: _: {
+              uncss = inputs.uncss.packages."${system}".default;
+              line-awesome-css = my-nixpkgs.packages."${system}".static_css_lineAwesome;
+            }
           );
           html = self.lib.pp.html;
-        in
-          pkgsLocal
-          // {
-            default = self'.packages.webpage;
-            webpage = import ./default.nix {
-              inherit html;
-              pkgs = pkgs';
-              data = inputs.data.lib.formatWith {
-                inherit pkgs;
-                markup = html;
-              };
+        in {
+          default = self'.packages.webpage;
+          webpage = import ./default.nix {
+            inherit html;
+            pkgs = pkgs';
+            data = inputs.data.lib.formatWith {
+              inherit pkgs;
+              markup = html;
             };
           };
+        };
         devenv.shells.default = {
+          imports = [my-nixpkgs.devenvModules.personal];
           languages.nix.enable = true;
           packages = [pkgs.miniserve];
         };
