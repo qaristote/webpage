@@ -1,4 +1,4 @@
-# Inspired from Classless.css v1.0
+# Inspired from Classless.css v1.1
 # https://classless.de/
 let
   defaultFont = "'Open Sans', 'DejaVu Sans', FreeSans, Helvetica, sans-serif";
@@ -62,15 +62,15 @@ in
       # reset block elements
       ''
         * { box-sizing: border-box; border-spacing: 0; margin: 0; padding: 0;}
-        header, footer, figure, table, video, details, blockquote,
-        ul, ol, dl, fieldset, pre, pre > code, caption {
+        header, footer, figure, video, details, blockquote,
+        ul, ol, dl, fieldset, pre, pre > code {
         	display: block;
-        	margin: 0.5rem 0rem 1rem;
+        	margin: .5rem 0rem 1rem;
         	width: 100%;
         	overflow: auto hidden;
         	text-align: left;
         }
-        video, summary, input, select { outline:none; }
+        video, summary, input, select { outline: none; }
       ''
       # reset clickable things  (FF Bug: select:hover prevents usage)
       + ''
@@ -86,24 +86,24 @@ in
       	max-width: ${width};
       	font: ${font-p};
       	color: ${cfg};
-      	padding: 3.0rem 0.6rem 0;
+      	padding: 3.0rem .6rem 0;
       	overflow-x: hidden;
       }
-      body > footer { margin: 10rem 0rem 0rem; font-size: 90%; }
+      body > footer { margin: 10rem; font-size: 90%; }
       p { margin: .6em 0; }
     ''
     # Links
     + lib.optionalString links ''
       a[href]{ text-decoration: underline solid ${cmed}; text-underline-position: under; }
       a[href^="#"] {text-decoration: none; }
-      a:hover, button:not([disabled]):hover, summary:hover {
+      a:hover, button:not([disabled]):hover, summary:hover, select:hover {
       	filter: brightness(92%); color: ${cemph}; border-color: ${cemph};
       }
     ''
     # Lists
     + lib.optionalString lists ''
       ul, ol, dl { margin: 1rem 0; padding: 0 0 0 2em; }
-      li:not(:last-child), dd:not(:last-child) { margin-bottom: 0.5rem; }
+      li:not(:last-child), dd:not(:last-child) { margin-bottom: .5rem; }
       dt { font-weight: bold; }
     ''
     # Headings
@@ -121,15 +121,15 @@ in
     # Tables
     + lib.optionalString tables ''
       td, th {
-        padding: 0.5em 0.8em;
+        padding: .5em .8em;
         text-align: right;
-        border-bottom: 0.1rem solid ${cmed};
+        border-bottom: ${border};
         white-space: nowrap;
         font-size: 95%;
       }
-      thead th[colspan] { padding: .2em 0.8em; text-align: center; }
-      thead tr:not(:only-child) td { padding: .2em 0.8em; }
-      thead+tbody tr:first-child td { border-top: 0.1rem  solid ${cdark};  }
+      thead th[colspan] { padding: .2em .8em; text-align: center; }
+      thead tr:not(:only-child) td { padding: .2em .8em; }
+      thead+tbody tr:first-child td { border-top: ${border};  }
       td:first-child, th:first-child { text-align: left; }
       tr:hover{ background-color: ${clight}; }
       table img { display: block; }
@@ -139,21 +139,26 @@ in
       img, svg { max-width: 100%; vertical-align: text-top; object-fit: cover; }
       p>img:not(:only-child) { float: right; margin: 0 0 .5em .5em; }
       figure > img { display: inline-block; width: auto; }
-      figure > img:only-of-type, figure > svg:only-of-type { max-width: 100%; display: block; margin: 0 auto 0.4em; }
-      figcaption, caption { font: ${font-h}; color: ${cdark}; width: 100%; }
+      figure > img:only-of-type, figure > svg:only-of-type { max-width: 100%; display: block; margin: 0 auto .4em; }
+      figure > *:not(:last-child) { margin-bottom: .4rem; }
+    ''
+    +
+    # Captions
+    ''
+      figcaption, caption { text-align: left; font: ${font-h}; color: ${cdark}; width: 100%; }
       figcaption > *:first-child, caption > *:first-child { display: inline-block; margin: 0; }
-      figure > *:not(:last-child) { margin-bottom: 0.4rem; }
+      table caption:last-child { caption-side: bottom; margin: .5em 0; }
     ''
     # Code
     + lib.optionalString code ''
       pre > code {
         margin: 0;
         position: relative;
-        padding: 0.8em;
+        padding: .8em;
         border-left: .4rem solid ${cemph};
       }
       code, kbd, samp {
-      	padding: 0.2em;
+      	padding: .2em;
       	font: ${font-c};
       	background: ${clight};
       	border-radius: 4px;
@@ -162,13 +167,13 @@ in
     ''
     # Miscellaneous
     + lib.optionalString blockquotes ''
-      blockquote { border-left: 0.4rem solid ${cmed}; padding: 0 0 0 1rem;  }
+      blockquote { border-left: .4rem solid ${cmed}; padding: 0 0 0 1rem;  }
     ''
     + lib.optionalString time ''
       time{ color: ${cdark}; }
     ''
     + lib.optionalString hr ''
-      hr { border: 0; border-top: 0.1rem solid ${cmed}; }
+      hr { border: 0; border-top: .1rem solid ${cmed}; }
     ''
     + lib.optionalString nav ''
       nav { width: 100%; background-color: ${clight}; }
@@ -207,7 +212,7 @@ in
       # Tables (advanced)
       + lib.optionalString tables-advanced
         /* tables */
-        figure > table:only-of-type { display: table; margin: 0.5em auto !important; width: fit-content; }
+        figure > table:only-of-type { margin: .5em auto !important; width: fit-content; }
         article figure > table caption { display: table-caption; caption-side: bottom; }
         article figure > table + figcaption:before,
         article table caption:before {
@@ -223,7 +228,7 @@ in
       article h3:before {
       	display: inline-block;
       	position: relative;
-      	font-size: 0.6em;
+      	font-size: .6em;
       	text-align: right;
       	vertical-align: baseline;
       	left: -1rem;
@@ -276,13 +281,13 @@ in
       nav ul:first-child > li {
       	display: inline-block;
       	margin: 0;
-      	padding: 0.8rem .6rem;
+      	padding: .8rem .6rem;
       }
       nav ul > li > ul {
       	display: none;
       	width: auto;
       	position: absolute;
-      	margin: 0.5rem 0;
+      	margin: .5rem 0;
       	padding: 1rem 2rem;
       	background-color: ${clight};
       	border: ${border};
@@ -294,7 +299,7 @@ in
       @media (max-width: 40rem) {
       	nav ul:first-child > li:first-child:after { content: " \25BE"; }
       	nav ul:first-child > li:not(:first-child):not(.sticky) { display: none; }
-      	nav ul:first-child:hover > li:not(:first-child):not(.sticky) { display: block; float: none !important; }
+      	nav ul:first-child:hover > li:not(:first-child):not(.sticky) { display: block; float: none !important; padding: .3rem .6rem; }
       }
     ''
     # Details and cards
@@ -302,7 +307,7 @@ in
       summary>* { display: inline; }
       .card, details {
       	display: block;
-      	margin: 0.5rem 0rem 1rem;
+      	margin: .5rem 0rem 1rem;
       	padding: 0 .6rem;
       	border-radius: 4px;
       	overflow: hidden;
@@ -321,8 +326,8 @@ in
       article > h2:first-of-type + p:first-letter, .lettrine {
       	float: left;
       	font-size: 3.5em;
-      	padding: 0.1em 0.1em 0 0;
-      	line-height: 0.68em;
+      	padding: .1em .1em 0 0;
+      	line-height: .68em;
       	color: ${cemph};
       }
     ''
@@ -342,7 +347,7 @@ in
       main aside {
       	position: absolute;
       	width: 8rem;      right: -8.6rem;
-      	font-size: 0.8em; line-height: 1.4em;
+      	font-size: .8em; line-height: 1.4em;
       }
       @media (max-width: 70rem) { main aside { display: none; } }
     ''
@@ -352,7 +357,9 @@ in
       	font: ${font-h};
       	border-radius: 4px;
       	border: 1.5px solid ${cmed};
-      	padding: 0.4em 0.8em;
+      	padding: .4em .8em;
+        color: ${cfg};
+        background-color: ${clight};
       }
       fieldset select, input:not([type=checkbox]):not([type=radio]) {
       	display: block;
@@ -361,17 +368,17 @@ in
       }
       button, select {
       	font-weight: bold;
-      	background-color: ${clight};
       	margin: .5em;
       	border: 1.5px solid ${clink};
+        color: ${clink};
       }
-      button { padding: 0.4em 1em; font-size: 85%; letter-spacing: 0.1em; }
+      button { padding: .4em 1em; font-size: 85%; letter-spacing: .1em; }
       button[disabled]{ color: ${cdark}; border-color: ${cmed}; }
-      fieldset { border-radius: 4px; border: ${border}; padding: .5em 1em;}
-      textarea:hover, input:not([type=checkbox]):not([type*='ra']):hover, select:hover{
+      fieldset { border-radius: 4px; border: ${border}; padding: .5em 1em; }
+      textarea:hover, input:not([type=checkbox]):not([type*='ra']):hover {
         border: 1.5px solid ${cemph};
       }
-      textarea:focus, input:not([type=checkbox]):not([type*='ra']):focus{
+      textarea:focus, input:not([type=checkbox]):not([type*='ra']):focus {
       	border: 1.5px solid ${clink};
       	box-shadow: 0 0 5px ${clink};
       }
@@ -394,14 +401,14 @@ in
     # Classes (Bootstrap-compatible) –––––––––––––––––––––
     # Grid
     + lib.optionalString grid ''
-      .row { display: flex; margin:  0.5rem -0.6rem; align-items: stretch; }
-      .row [class*="col"] { padding: 0  0.6rem; }
-      .row .col   { flex: 1 1 100%; }
-      .row .col-2 { flex: 0 0 16.66%; max-width: 16.66%;}
-      .row .col-3 { flex: 0 0 25%; max-width: 25%;}
-      .row .col-4 { flex: 0 0 33.33%; max-width: 33.33%; }
-      .row .col-5 { flex: 0 0 41.66%; max-width: 41.66%; }
-      .row .col-6 { flex: 0 0 50%; max-width: 50%; }
+      .row { display: flex; margin: .5rem -.6rem; align-items: stretch; }
+      .row [class^="col"] { padding: 0 .6rem; }
+      .row .col   { flex: 0 4 100%;   }
+      .row .col-2 { flex: 0 2 16.66%; }
+      .row .col-3 { flex: 0 3 25%;    }
+      .row .col-4 { flex: 0 4 33.33%; }
+      .row .col-5 { flex: 0 5 41.66%; }
+      .row .col-6 { flex: 0 6 50%;    }
       @media (max-width: 40rem) { .row { flex-direction: column; } }
     ''
     # Align
