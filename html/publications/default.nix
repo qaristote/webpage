@@ -69,10 +69,12 @@
                       (dd (blockquote abstract))
                       (dt "Cite.")
                       (let
-                        citeWith = title: attr:
+                        citeWith = title: type:
                           details [
                             (summary title)
-                            (pre (code (lib.getAttr attr cite)))
+                            (pre (code (
+                              lib.readFile "${data.publications.files}/${type}/${id}"
+                            )))
                           ];
                       in
                         dd [
