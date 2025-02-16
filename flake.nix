@@ -3,7 +3,6 @@
 
   inputs = {
     data.url = "github:qaristote/info";
-    devenv.url = "github:cachix/devenv";
     my-nixpkgs.url = "github:qaristote/my-nixpkgs";
     uncss = {
       url = "github:qaristote/uncss";
@@ -24,7 +23,7 @@
       lib,
       ...
     }: {
-      imports = builtins.attrValues {inherit (my-nixpkgs.flakeModules) personal devenv;};
+      imports = builtins.attrValues {inherit (my-nixpkgs.flakeModules) personal;};
 
       flake.lib = import ./lib {inherit lib;};
 
@@ -52,11 +51,6 @@
               markup = html;
             };
           };
-        };
-        devenv.shells.default = {
-          imports = [my-nixpkgs.devenvModules.personal];
-          languages.nix.enable = true;
-          packages = [pkgs.miniserve];
         };
       };
     });
