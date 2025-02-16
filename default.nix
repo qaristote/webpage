@@ -1,96 +1,99 @@
 {
-  pkgs,
-  html,
+  stdenvNoCC,
+  # Packages
+  line-awesome,
+  line-awesome-css,
+  uncss,
+  yuicompressor,
+  imagemagick,
+  nix,
+  perlPackages,
+  # Source files
+  nixpkgsSrc,
+  src,
   data,
 }: let
-  commonArgs = {
-    inherit data html make;
-    inherit (pkgs) lib;
-  };
-  make = path: overrides: let
-    f = import path;
-  in
-    f ((builtins.intersectAttrs (builtins.functionArgs f) commonArgs)
-      // overrides);
-
-  indexHTML = builtins.toFile "index.html" (make ./html {});
-  classlessCSS = let
-    setOption = option: value: {"${option}" = value;};
-    setOptions = options: value:
-      builtins.foldl' (tmp: option: tmp // setOption option value) {} options;
-    enable = options: setOptions options true;
-    disable = options: setOptions options false;
-  in
-    builtins.toFile "classless.css" (make ./css/classless.nix
-      (disable ["tables" "hr"]
-        // enable [
-          "tooltip-citations"
-          "navbar"
-          "details-cards"
-          "big-first-letter"
-          "printing"
-          "grid"
-        ]));
-
-  robotsTXT = builtins.toFile "robots.txt" ''
-    user-agent: *
-    disallow: /static/
-    allow: /static/icon.png
+  compress = "${yuicompressor}/bin/yuicompressor";
+  clean = "${uncss}/bin/uncss";
+  compressJPEG = size: image: ''
+    ${imagemagick}/bin/magick  ${image} \
+                               -sampling-factor 4:2:0 \
+                               -strip \
+                               -quality 85 \
+                               -interlace JPEG \
+                               -colorspace RGB \
+                               -resize ${size}x${size} \
+                               -colorspace sRGB \
+                               ${image}.${size}
   '';
+  mkPushDir = dir: ''mkdir -p ${dir} && pushd "$_"'';
+  nixEvalExpr = "${nix}/bin/nix --extra-experimental-features nix-command --extra-experimental-features flakes eval --impure --raw --expr";
+  make = "import $src/make.nix {pkgs = import ${nixpkgsSrc} {}; dataSrc = $src/data;}";
 in
-  pkgs.callPackage ({
-    # Packages
-    line-awesome,
-    line-awesome-css,
-    uncss,
-    yuicompressor,
-    imagemagick,
-    # Source files
-    index-html ? indexHTML,
-    classless-css ? classlessCSS,
-    files ? data.files,
-    icon ? ./static/icon.png,
-  }: let
-    compress = "${yuicompressor}/bin/yuicompressor";
-    clean = "${uncss}/bin/uncss";
-    compressJPEG = size: ''
-      ${imagemagick}/bin/convert -sampling-factor 4:2:0 \
-                                 -strip \
-                                 -quality 85 \
-                                 -interlace JPEG \
-                                 -colorspace RGB \
-                                 -resize ${size} \
-                                 -colorspace sRGB \
+  stdenvNoCC.mkDerivation {
+    name = "webpage";
+    requiredSystemFeatures = ["recursive-nix"];
+    subsrcs = [src data];
+    src = "webpage-src";
+    unpackPhase = ''
+      read -ra srcs <<< "$subsrcs"
+      mkdir $src
+      ln -s ''${srcs[0]}/* $src/
+      ln -s ''${srcs[1]} $src/data
+      ls $src
     '';
-  in
-    pkgs.runCommand "webpage" {} ''
-      set -o xtrace
-      mkdir $out && pushd "$_"
-      ln -sT ${index-html} index.html
-      ln -sT ${robotsTXT} robots.txt
+    installPhase = ''
+      # set -o xtrace
+      pushd $src
+      src=$(pwd)
       popd
+      ${mkPushDir "$out"} # $out/
 
-      mkdir $out/static && pushd "$_"
-      ln -sT ${icon} icon.png
-      cp -r ${files} files
-      chmod a+w files
-      pushd files
-      ${compressJPEG "128x128"} avatar.jpg avatar.jpg.128
-      ${compressJPEG "256x256"} avatar.jpg avatar.jpg.256
-      ${compressJPEG "512x512"} avatar.jpg avatar.jpg.512
-      popd
-      chmod a-w files
-      popd
+      # build HTML
+      ${nixEvalExpr} "
+        ${make} $src/html {}
+      " > index.html
+      ${perlPackages.HTMLClean}/bin/htmlclean index.html
+      rm index.html.bak
 
-      mkdir -p $out/static/css && pushd "$_"
-      ${clean} ${index-html} --stylesheets file://${classless-css} \
+      # copy static files
+      cp -r $src/static/ .
+      ln -s static/robots.txt
+      chmod 777 static
+      pushd static # $out/static/
+      cp -r ${data}/files .
+      chmod 777 files
+      pushd files # $out/static/files/
+      ${compressJPEG "128" "avatar.jpg"}
+      ${compressJPEG "256" "avatar.jpg"}
+      ${compressJPEG "512" "avatar.jpg"}
+
+      popd # $out/static/
+
+      # build and compress CSS
+      ${mkPushDir "css"} # $out/static/css/
+      ${nixEvalExpr} "
+        ${make} $src/css/classless.nix {
+           big-first-letter = true;
+           details-cards = true;
+           grid = true;
+           hr = false;
+           navbar = true;
+           tables = false;
+           tooltip-citations = true;
+           printing = true;
+        }
+      " > classless.css
+      ${clean} $out/index.html --stylesheets file://$(pwd)/classless.css \
       | ${compress} --type css >classless.min.css
-      popd
-
-      mkdir -p $out/static/css/fonts/line-awesome && pushd "$_"
-      ln -sT ${line-awesome}/share/fonts/woff2 webfonts
-      ${clean} ${index-html} --stylesheets file://${line-awesome-css} \
+      rm classless.css
+      ${mkPushDir "fonts/line-awesome"} # $out/static/css/fonts/lineawesome
+      ln -s ${line-awesome}/share/fonts/woff2 webfonts
+      ${clean} $out/index.html --stylesheets file://${line-awesome-css} \
       | ${compress} --type css >line-awesome.min.css
-      popd
 
-    '') {}
+      popd # $out/static
+      popd # $out/
+      popd #
+    '';
+  }

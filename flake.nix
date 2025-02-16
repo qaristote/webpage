@@ -18,11 +18,7 @@
     my-nixpkgs,
     ...
   } @ inputs:
-    flake-parts.lib.mkFlake {inherit inputs;} ({
-      self,
-      lib,
-      ...
-    }: {
+    flake-parts.lib.mkFlake {inherit inputs;} ({lib, ...}: {
       imports = builtins.attrValues {inherit (my-nixpkgs.flakeModules) personal;};
 
       flake.lib = import ./lib {inherit lib;};
@@ -32,24 +28,20 @@
         pkgs,
         system,
         ...
-      }: {
-        packages = let
-          pkgs' = pkgs.extend (
-            _: _: {
-              uncss = inputs.uncss.packages."${system}".default;
-              line-awesome-css = my-nixpkgs.packages."${system}".static_css_lineAwesome;
-            }
-          );
-          html = self.lib.pp.html;
-        in {
+      }: let
+        pkgs' = pkgs.extend (
+          _: _: {
+            uncss = inputs.uncss.packages."${system}".default;
+            line-awesome-css = my-nixpkgs.packages."${system}".static_css_lineAwesome;
+          }
+        );
+      in {
+        packages = {
           default = self'.packages.webpage;
-          webpage = import ./default.nix {
-            inherit html;
-            pkgs = pkgs';
-            data = inputs.data.lib.formatWith {
-              inherit pkgs;
-              markup = html;
-            };
+          webpage = pkgs'.callPackage ./default.nix {
+            nixpkgsSrc = inputs.nixpkgs.outPath;
+            src = pkgs'.callPackage ./src.nix {};
+            data = inputs.data.packages."${system}".src;
           };
         };
       };
