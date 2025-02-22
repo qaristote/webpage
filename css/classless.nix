@@ -89,7 +89,7 @@ in
       	padding: 3.0rem .6rem 0;
       	overflow-x: hidden;
       }
-      body > footer { margin: 10rem; font-size: 90%; }
+      body > footer { margin-top: 10rem; text-align: center; font-size: 90%; }
       p { margin: .6em 0; }
     ''
     # Links
