@@ -7,7 +7,7 @@
   yuicompressor,
   imagemagick,
   nix,
-  perlPackages,
+  minify,
   # Source files
   nixpkgsSrc,
   src,
@@ -53,8 +53,7 @@ in
       ${nixEvalExpr} "
         ${make} $src/html {}
       " > index.html
-      ${perlPackages.HTMLClean}/bin/htmlclean index.html
-      rm index.html.bak
+      ${minify}/bin/minify index.html --output index.html
 
       # copy static files
       cp -r $src/static/ .
