@@ -63,7 +63,7 @@ in
           } with the help of ${href "https://nixos.org/" "Nix"} and ${
             href "https://classless.de/" "Classless CSS"
           }, and compressed with the help of ${
-            href "https://https://go.tacodewolff.nl/minify" "minify"
+            href "https://go.tacodewolff.nl/minify" "minify"
           }, ${
             href "https://github.com/uncss/uncss" "uncss"
           }, ${href "https://yui.github.io/yuicompressor/" "YUI Compressor"} and ${
