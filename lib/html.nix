@@ -202,35 +202,60 @@
   icon =
     tryOverride (attrs: id: tagsContainerFuns.i (attrs // {class = id;}) "");
   mailto = tryOverride (attrs: address: href attrs "mailto:${address}" address);
+  makeDate = date: let
+    year = builtins.toString date.year;
+    month =
+      lib.optionalString (date.month < 10) "0"
+      + builtins.toString date.month;
+    day =
+      if date ? day
+      then lib.optionalString (date.day < 10) "0" + builtins.toString date.day
+      else "0";
+    monthPretty = builtins.head (lib.drop (date.month - 1) [
+      "jan"
+      "feb"
+      "mar"
+      "apr"
+      "may"
+      "jun"
+      "jul"
+      "aug"
+      "sep"
+      "oct"
+      "nov"
+      "dev"
+    ]);
+  in {
+    tag = tagsContainerFuns.time {date = "${year}-${month}-${day}";};
+    pretty = "${monthPretty}. " + lib.optionalString (day != "0") "${day}, " + year;
+  };
   timerange = let
-    print = date: let
-      year = builtins.toString date.year;
-      month =
-        lib.optionalString (date.month < 10) "0"
-        + builtins.toString date.month;
-      monthPretty = builtins.head (lib.drop (date.month - 1) [
-        "jan"
-        "feb"
-        "mar"
-        "apr"
-        "may"
-        "jun"
-        "jul"
-        "aug"
-        "sep"
-        "oct"
-        "nov"
-        "dev"
-      ]);
-      day = builtins.toString date.day;
+    print = dateValue: let
+      datePretty = (makeDate (builtins.removeAttrs dateValue ["day"])).pretty;
     in
-      tagsContainerFuns.time {date = "${year}-${month}-${day}";}
-      "${monthPretty}. ${year}";
+      (makeDate dateValue).tag datePretty;
   in
     start: end: "${print start} - ${print end}";
   doctype = type: ''
     <!DOCTYPE ${type}>
   '';
+
+  tab = name: {
+    id,
+    checked ? false,
+    title,
+    content,
+  }:
+    lines [
+      (tagsEmptyFuns.inputWith ({
+          inherit id name;
+          type = "radio";
+        }
+        // lib.optionalAttrs checked {checked = "checked";}))
+      (tagsContainerFuns.label {for = id;} [(tagsContainerFuns.h4 title)])
+      (tagsContainerFuns.div {class = "tab";} content)
+    ];
+  tabbox = name: tabs: tagsContainerFuns.div {class = "tabs";} (builtins.map (tab name) tabs);
 in
   tagsContainerFuns
   // tagsEmptyFuns
@@ -246,8 +271,14 @@ in
       icon
       lines
       mailto
+      makeDate
       timerange
+      tab
+      tabbox
       ;
+  }
+  // {
+    blockquote = tryOverride (attrs: content: tagsContainerFuns.blockquote attrs (builtins.replaceStrings ["\n"] ["<br>"] content));
   }
   // {
     sort = let

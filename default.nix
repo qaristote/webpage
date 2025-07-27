@@ -27,7 +27,7 @@
                                ${image}.${size}
   '';
   mkPushDir = dir: ''mkdir -p ${dir} && pushd "$_"'';
-  nixEvalExpr = "${nix}/bin/nix --extra-experimental-features nix-command --extra-experimental-features flakes eval --impure --raw --expr";
+  nixEvalExpr = "${nix}/bin/nix --extra-experimental-features nix-command --extra-experimental-features flakes eval --impure --raw --show-trace --expr";
   make = "import $src/make.nix {pkgs = import ${nixpkgsSrc} {}; dataSrc = $src/data;}";
 in
   stdenvNoCC.mkDerivation {
@@ -81,6 +81,7 @@ in
            tables = false;
            tooltip-citations = true;
            printing = true;
+           tabs = true;
         }
       " > classless.css
       ${clean} $out/index.html --stylesheets file://$(pwd)/classless.css \

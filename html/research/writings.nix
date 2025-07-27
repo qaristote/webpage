@@ -46,18 +46,17 @@
       // lib.optionalAttrs (publication ? DOI) {
         doi = "${small "DOI"}: ${href "https://doi.org/${DOI}" (code DOI)}";
       };
-  listPublications = collection: collectionTitle:
+  listPublications = collection:
     with html;
-      section {id = "Publications#${collectionTitle}";} [
-        (h2 collectionTitle)
+      section [
         (dl (for (sort.reverse.byPath ["issued" "date-parts"] collection)
           (publication: let
             formatted = format publication;
           in
             with formatted;
               lines [
-                (dt {id = "Publications#${id}";}
-                  "${href {target = "_blank";} url title} (${year})")
+                (dt {id = "Writings#${id}";}
+                  "${href {target = "_blank";} url (em title)} (${year})")
                 (dd [
                   (concatStringsSuffix ". "
                     (attrValsOpt ["authors" "note" "published" "isbn" "issn" "doi"]
@@ -88,11 +87,8 @@
               ])))
       ];
 in {
-  title = "Publications";
-  priority = 10;
-  body = with html;
-    lines [
-      (listPublications data.publications.selected "Selected works")
-      (listPublications (with data.publications; lib.subtractLists selected all) "Other works")
-    ];
+  conferences = listPublications data.publications.conferences;
+  journals = listPublications data.publications.journals;
+  misc = listPublications data.publications.misc;
+  reports = listPublications data.publications.reports;
 }

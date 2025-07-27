@@ -17,6 +17,6 @@ in
     ./education
     ./experience
     # ./languages
-    ./publications
+    ./research
     ./software
   ]

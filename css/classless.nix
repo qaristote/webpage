@@ -32,6 +32,7 @@ in
     aside ? false,
     inputs ? false,
     printing ? false,
+    tabs ? false,
     ## Classes
     grid ? false,
     align ? false,
@@ -398,6 +399,49 @@ in
       	.row { flex-direction: row; }
       }
     ''
+    # Tab boxes
+    + lib.optionalString tabs ''
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        background: linear-gradient(0deg, ${cbg} 1rem, var(--clight) 0%);
+        border: ${border}; border-radius: 5px;
+        padding-bottom: 0.5em;
+      }
+      .tabs label {
+        order: 1; /*Put the labels first*/
+        display: block;
+        cursor: pointer;
+        padding: .5rem .8rem;
+        margin: .5rem 0 -1px;
+        border-radius: 5px 5px 0 0;
+        color: ${clink};
+        background: ${clight};
+      }
+      .tabs label:first-of-type{ margin-left: 1rem; }
+      .tabs .tab {
+        order: 99; /*Put the tabs last*/
+        flex-grow: 1;
+        width: 100%;
+        display: none;
+        z-index: 10;
+        padding: 0 1rem;
+        background: ${cbg};
+        border-top: ${border};
+      }
+      .tabs input[type="radio"]:not(:checked) + label:hover { filter: brightness(90%); }
+      .tabs input[type="radio"] { display: none; }
+      .tabs input[type="radio"]:checked + label {
+        border: ${border}; border-bottom: 0px;
+        background: ${cbg}; z-index: 11;
+      }
+      .tabs input[type="radio"]:checked + label + .tab { display: block; }
+
+      @media (max-width: 45em) {
+        .tabs .tab, .tabs label { order: initial; }
+        .tabs label { width: 100%; margin: 0 0 -1px !important; }
+      }
+      @media print { .tabs label + .tab { display: block; } .tabs label { display: none; } }''
     # Classes (Bootstrap-compatible) –––––––––––––––––––––
     # Grid
     + lib.optionalString grid ''
