@@ -2,7 +2,7 @@
   description = "Source code of Quentin Aristote's personal webpage.";
 
   inputs = {
-    data.url = "github:qaristote/info";
+    data.url = "github:qaristote/info/new-pub-format";
     my-nixpkgs.url = "github:qaristote/my-nixpkgs";
     uncss = {
       url = "github:qaristote/uncss";
