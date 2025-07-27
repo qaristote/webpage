@@ -37,12 +37,6 @@
       // lib.optionalAttrs (publication ? event-title) {
         published = "At ${em event-title}";
       }
-      // lib.optionalAttrs (publication ? ISBN) {
-        isbn = "${small "ISBN"}: ${ISBN}";
-      }
-      // lib.optionalAttrs (publication ? ISSN) {
-        issn = "${small "ISSN"}: ${ISSN}";
-      }
       // lib.optionalAttrs (publication ? DOI) {
         doi = "${small "DOI"}: ${href "https://doi.org/${DOI}" (code DOI)}";
       };
@@ -59,7 +53,7 @@
                   "${href {target = "_blank";} url (em title)} (${year})")
                 (dd [
                   (concatStringsSuffix ". "
-                    (attrValsOpt ["authors" "note" "published" "isbn" "issn" "doi"]
+                    (attrValsOpt ["authors" "note" "published" "doi"]
                       formatted))
                   (details [
                     (summary "More")
