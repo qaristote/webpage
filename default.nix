@@ -12,6 +12,8 @@
   nixpkgsSrc,
   src,
   data,
+  # Parameters
+  theme ? "light",
 }: let
   compress = "${yuicompressor}/bin/yuicompressor";
   clean = "${uncss}/bin/uncss";
@@ -72,7 +74,7 @@ in
       # build and compress CSS
       ${mkPushDir "css"} # $out/static/css/
       ${nixEvalExpr} "
-        ${make} $src/css/classless.nix {
+        ${make} $src/css/classless.nix ({
            big-first-letter = true;
            details-cards = true;
            grid = true;
@@ -82,7 +84,7 @@ in
            tooltip-citations = true;
            printing = true;
            tabs = true;
-        }
+        } // (import $src/css/themes.nix).${theme})
       " > classless.css
       ${clean} $out/index.html --stylesheets file://$(pwd)/classless.css \
       | ${compress} --type css >classless.min.css
