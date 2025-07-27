@@ -13,7 +13,7 @@
   src,
   data,
   # Parameters
-  theme ? "light",
+  theme ? "personal-dark",
 }: let
   compress = "${yuicompressor}/bin/yuicompressor";
   clean = "${uncss}/bin/uncss";

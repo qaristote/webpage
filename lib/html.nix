@@ -246,15 +246,16 @@
     title,
     content,
   }:
-    lines [
-      (tagsEmptyFuns.inputWith ({
-          inherit id name;
-          type = "radio";
-        }
-        // lib.optionalAttrs checked {checked = "checked";}))
-      (tagsContainerFuns.label {for = id;} [(tagsContainerFuns.h4 title)])
-      (tagsContainerFuns.div {class = "tab";} content)
-    ];
+    with tagsContainerFuns;
+      lines [
+        (tagsEmptyFuns.inputWith ({
+            inherit id name;
+            type = "radio";
+          }
+          // lib.optionalAttrs checked {checked = "checked";}))
+        (label {for = id;} [(small (b title))])
+        (div {class = "tab";} content)
+      ];
   tabbox = name: tabs: tagsContainerFuns.div {class = "tabs";} (builtins.map (tab name) tabs);
 in
   tagsContainerFuns

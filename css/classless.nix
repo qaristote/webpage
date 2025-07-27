@@ -95,10 +95,20 @@ in
     ''
     # Links
     + lib.optionalString links ''
-      a[href]{ text-decoration: underline solid ${cmed}; text-underline-position: under; }
-      a[href^="#"] {text-decoration: none; }
+      /*
+      a[href]{
+         text-decoration: underline solid ${cmed};
+         text-underline-position: under;
+      }
+      a[href^="#"] { text-decoration: none; }
+      */
+      a[href]{
+        text-decoration: none;
+      }
       a:hover, button:not([disabled]):hover, summary:hover, select:hover {
-      	filter: brightness(92%); color: ${cemph}; border-color: ${cemph};
+      	filter: brightness(92%);
+        color: ${cemph};
+        border-color: ${cemph};
       }
     ''
     # Lists
@@ -404,7 +414,7 @@ in
       .tabs {
         display: flex;
         flex-wrap: wrap;
-        background: linear-gradient(0deg, ${cbg} 1rem, var(--clight) 0%);
+        background: linear-gradient(0deg, ${cbg} 1rem, ${clight} 0%);
         border: ${border}; border-radius: 5px;
         padding-bottom: 0.5em;
       }

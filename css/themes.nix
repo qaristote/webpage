@@ -1,8 +1,18 @@
 # medium, milligram and sepia are commented out as they require external fonts
-{
-  light = {};
+let
+  updateBorder = theme:
+    if theme ? cmed
+    then theme // {border = "1px solid ${theme.cmed}";}
+    else theme;
+in {
+  light = updateBorder {};
 
-  dark = {
+  personal-light = updateBorder {
+    clink = "#2e6f40";
+    cemph = "#253d2c";
+  };
+
+  dark = updateBorder {
     cdark = ''#999'';
     clight = ''#333'';
     cmed = ''#566'';
@@ -15,7 +25,20 @@
     cemphbg = ''#0b91'';
   };
 
-  # sepia = {
+  personal-dark = updateBorder {
+    cdark = ''#999'';
+    clight = ''#262a2b'';
+    cmed = ''#566'';
+    clink = ''#68BA7F'';
+    # foreground
+    cfg = ''#eeeeee'';
+    cemph = ''#0b9'';
+    # background
+    cbg = ''#181a1b'';
+    cemphbg = ''#0b91'';
+  };
+
+  # sepia = updateBorder {
   #   rem = ''14pt'';
   #   width = ''48rem'';
   #   font-p = ''1em/1.6 'Libertinus Serif', Times, serif'';
@@ -34,7 +57,7 @@
   #   cemphbg = ''#a3540310'';
   # };
 
-  # milligram = {
+  # milligram = updateBorder {
   #   navpos = ''fixed'';
   #   rem = ''11pt'';
   #   width = ''800px'';
@@ -42,7 +65,6 @@
   #   font-h = ''300 1em/1.3 'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif'';
   #   font-c = ''86%/1.4 monospace'';
   #   ornament = ''"‹‹‹ ›››"'';
-  #   border = ''1px solid var(--cmed)'';
   #   cdark = ''#6c605c'';
   #   clight = ''#f4f5f6'';
   #   cmed = ''#d1d1d1'';
@@ -55,7 +77,7 @@
   #   cemphbg = ''#9b4dca10'';
   # };
 
-  pure = {
+  pure = updateBorder {
     navpos = ''absolute'';
     width = ''768px'';
     rem = ''18px'';
@@ -63,7 +85,6 @@
     font-h = ''1em/1.6 Helvetica,Arial,sans-serif'';
     font-c = ''86%/1.4 monospace'';
     ornament = ''"‹‹‹ ›››"'';
-    border = ''1px solid var(--cmed)'';
     cdark = ''#777'';
     clight = ''#f8f8ff'';
     cmed = ''#e6e6e6'';
@@ -76,7 +97,7 @@
     cemphbg = ''#1f8dd610'';
   };
 
-  sakura = {
+  sakura = updateBorder {
     navpos = ''absolute'';
     width = ''684px'';
     rem = ''18px'';
@@ -84,7 +105,6 @@
     font-h = ''1em/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif'';
     font-c = ''.8em/1.4 monospace'';
     ornament = ''""'';
-    border = ''1px solid var(--cmed)'';
     cdark = ''#4a4a4a'';
     clight = ''#f1f1f1'';
     cmed = ''#d1d1d1'';
@@ -97,7 +117,7 @@
     cemphbg = ''#982c6110'';
   };
 
-  skeleton = {
+  skeleton = updateBorder {
     navpos = ''absolute'';
     rem = ''15px'';
     width = ''800px'';
@@ -105,7 +125,6 @@
     font-h = ''1em/1.6 "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif'';
     font-c = ''.9em/1.4 monospace'';
     ornament = ''"───────"'';
-    border = ''1px solid var(--cmed)'';
     cdark = ''#4a4a4a'';
     clight = ''#f1f1f1'';
     cmed = ''#e1e1e1'';
@@ -118,7 +137,7 @@
     cemphbg = ''#0fa0ce10'';
   };
 
-  bootstrap = {
+  bootstrap = updateBorder {
     rem = ''16px'';
     navpos = ''absolute'';
     width = ''960px'';
@@ -126,7 +145,6 @@
     font-h = ''1em/1.6 "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif'';
     font-c = ''.9em/1.4 SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace'';
     ornament = ''""'';
-    border = ''1px solid var(--cmed)'';
     cdark = ''#343a40'';
     clight = ''#f8f9fa'';
     cmed = ''#6c757d'';
@@ -139,7 +157,7 @@
     cemphbg = ''#7952b310'';
   };
 
-  medium = {
+  medium = updateBorder {
     rem = ''19px'';
     navpos = ''absolute'';
     width = ''720px'';
@@ -147,7 +165,6 @@
     font-h = ''.9em/1.4 'Archivo', sans !important'';
     font-c = ''.9em/1.4 Consolas,"Liberation Mono","Courier New",monospace'';
     ornament = ''""'';
-    border = ''1px solid var(--cmed)'';
     cdark = ''#343a40'';
     clight = ''#fafafa'';
     cmed = ''#757575'';
@@ -160,7 +177,7 @@
     cemphbg = ''#1a891710'';
   };
 
-  tufte = {
+  tufte = updateBorder {
     rem = ''15px'';
     navpos = ''absolute'';
     width = ''800px'';
@@ -168,7 +185,6 @@
     font-h = ''1.4em/1.5 et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif'';
     font-c = ''.9em/1.4 Consolas,"Liberation Mono","Courier New",monospace'';
     ornament = ''""'';
-    border = ''1px solid var(--cmed)'';
     cdark = ''#111'';
     clight = ''#fffff8'';
     cmed = ''#b4d5fe'';
