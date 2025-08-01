@@ -7,16 +7,16 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1753625181,
-        "narHash": "sha256-YdmSIA7hcdwHcuwwZ04rt8I0vaoknyUiGY79zaduR4E=",
+        "lastModified": 1754045081,
+        "narHash": "sha256-vQDCKW4zZ6t+Xv6KopCUsF2l+CxI4sjLtssEZPoSVFQ=",
         "owner": "qaristote",
         "repo": "info",
-        "rev": "9749429636e7e5e2515f1c75d228d5321907fba4",
+        "rev": "7132af9e3a7f84cebe287b3174f2d4a9c25252ca",
         "type": "github"
       },
       "original": {
         "owner": "qaristote",
-        "ref": "new-pub-format",
+        "ref": "master",
         "repo": "info",
         "type": "github"
       }
