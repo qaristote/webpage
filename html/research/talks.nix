@@ -65,7 +65,7 @@ dl (
                     title: type:
                     details [
                       (summary title)
-                      (pre (code (lib.readFile "${data.research.files}/${type}/${id}")))
+                      (pre (code (lib.readFile "${data.files}/biblio/${type}/${id}")))
                     ];
                 in
                 dd [
