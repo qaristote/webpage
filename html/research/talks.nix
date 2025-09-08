@@ -32,6 +32,7 @@ dl (
       extra = if item ? note then note else "";
       abstractURL = matchFirst ".*abstract: ([^\n ]*).*" extra;
       slidesURL = matchFirst ".*slides: ([^\n ]*).*" extra;
+      posterURL = matchFirst ".*poster: ([^\n ]*).*" extra;
       # broken because of tabs
       # paperURL = let
       #   paperId = matchFirst "([A-z0-9]*[0-9]{4})[a-z]" id;
@@ -48,6 +49,7 @@ dl (
         (with (makeDate date); tag pretty)
         "@ ${href url event-title}, ${publisher-place}"
         (join slidesURL "slides")
+        (join posterURL "poster")
         # broken because of tabs
         # (join paperURL "paper")
         (details [
