@@ -28,7 +28,13 @@ let
     // (
       let
         authorsOther = lib.remove "${data.basics.name.first} ${data.basics.name.last}" (
-          builtins.map (author: "${author.given} ${author.family}") author
+          builtins.map (
+            author:
+            with author;
+            lib.concatStringsSep " " (
+              [ given ] ++ lib.optional (author ? non-dropping-particle) non-dropping-particle ++ [ family ]
+            )
+          ) author
         );
       in
       lib.optionalAttrs (authorsOther != [ ]) {
